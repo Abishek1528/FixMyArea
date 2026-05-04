@@ -29,4 +29,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the issues reported by the user.
+     */
+    public function issues()
+    {
+        return $this->hasMany(Issue::class);
+    }
 }
