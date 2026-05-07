@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
-use App\Http\Requests\StoreIssueRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -22,9 +21,14 @@ class IssueController extends Controller
     /**
      * Store a newly created issue in storage.
      */
-    public function store(StoreIssueRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|in:Roads,Lighting,Waste,Water,Other',
+            'description' => 'required|string|max:1000',
+            'address' => 'nullable|string|max:255',
+        ]);
 
         $request->user()->issues()->create($validated);
 
