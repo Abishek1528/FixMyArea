@@ -31,6 +31,7 @@
                                         </svg>
                                     </div>
                                     <input type="text" name="title" id="title" required
+                                        value="{{ old('title') }}"
                                         class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner"
                                         placeholder="e.g., Pothole on Main Street">
                                 </div>
@@ -48,12 +49,12 @@
                                     </div>
                                     <select name="category" id="category" required
                                         class="block w-full pl-12 pr-10 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none shadow-inner">
-                                        <option value="" disabled selected>Select a Category</option>
-                                        <option value="Roads">Roads / Potholes</option>
-                                        <option value="Lighting">Street Lighting</option>
-                                        <option value="Waste">Waste / Garbage</option>
-                                        <option value="Water">Water / Drainage</option>
-                                        <option value="Other">Other</option>
+                                        <option value="" disabled {{ old('category') ? '' : 'selected' }}>Select a Category</option>
+                                        <option value="Roads" {{ old('category') == 'Roads' ? 'selected' : '' }}>Roads / Potholes</option>
+                                        <option value="Lighting" {{ old('category') == 'Lighting' ? 'selected' : '' }}>Street Lighting</option>
+                                        <option value="Waste" {{ old('category') == 'Waste' ? 'selected' : '' }}>Waste / Garbage</option>
+                                        <option value="Water" {{ old('category') == 'Water' ? 'selected' : '' }}>Water / Drainage</option>
+                                        <option value="Other" {{ old('category') == 'Other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-500">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +76,7 @@
                                     </div>
                                     <textarea name="description" id="description" rows="5" required
                                         class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner resize-none"
-                                        placeholder="Describe the issue in detail..."></textarea>
+                                        placeholder="Describe the issue in detail...">{{ old('description') }}</textarea>
                                     <div class="absolute bottom-4 right-4 text-xs text-gray-600">0/1000</div>
                                 </div>
                                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
@@ -93,6 +94,7 @@
                                             </svg>
                                         </div>
                                         <input type="text" name="address" id="address"
+                                            value="{{ old('address') }}"
                                             class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner"
                                             placeholder="e.g., 123 Main St, Springfield">
                                     </div>
