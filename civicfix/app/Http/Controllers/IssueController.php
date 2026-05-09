@@ -11,6 +11,29 @@ use Illuminate\Support\Facades\Auth;
 class IssueController extends Controller
 {
     /**
+     * Display a listing of the user's reported issues.
+     */
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+        $issues = $user->issues()
+            ->latest()
+            ->paginate(10);
+
+        $stats = [
+            'total' => $user->issues()->count(),
+            'pending' => $user->issues()->where('status', 'pending')->count(),
+            'in_progress' => $user->issues()->where('status', 'in_progress')->count(),
+            'resolved' => $user->issues()->where('status', 'resolved')->count(),
+        ];
+
+        return view('dashboard', [
+            'issues' => $issues,
+            'stats' => $stats,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new issue.
      */
     public function create(): View
