@@ -59,4 +59,52 @@ class IssueController extends Controller
             ->with('status', 'issue-reported')
             ->with('message', 'Your report has been submitted successfully!');
     }
+
+    /**
+     * Display the specified issue.
+     */
+    public function show(Issue $issue): View
+    {
+        if ($issue->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('issues.show', [
+            'issue' => $issue,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified issue.
+     */
+    public function edit(Issue $issue): View
+    {
+        if ($issue->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('issues.edit', [
+            'issue' => $issue,
+        ]);
+    }
+
+    /**
+     * Update the specified issue in storage.
+     */
+    public function update(Request $request, Issue $issue): RedirectResponse
+    {
+        if ($issue->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,investigating,in_progress,resolved,closed',
+        ]);
+
+        $issue->update($validated);
+
+        return redirect()->route('issues.show', $issue)
+            ->with('status', 'status-updated')
+            ->with('message', 'Issue status updated successfully!');
+    }
 }
