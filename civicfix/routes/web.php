@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
     Route::get('/issues/{issue}/edit', [IssueController::class, 'edit'])->name('issues.edit');
     Route::put('/issues/{issue}', [IssueController::class, 'update'])->name('issues.update');
+    Route::get('/map', [IssueController::class, 'map'])->name('issues.map');
 });
 
 require __DIR__.'/auth.php';

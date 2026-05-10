@@ -107,4 +107,16 @@ class IssueController extends Controller
             ->with('status', 'status-updated')
             ->with('message', 'Issue status updated successfully!');
     }
+
+    /**
+     * Display the community map with all issues.
+     */
+    public function map(): View
+    {
+        $issues = Issue::all(['id', 'title', 'description', 'category', 'status', 'latitude', 'longitude', 'address']);
+        
+        return view('issues.map', [
+            'issues' => $issues,
+        ]);
+    }
 }
