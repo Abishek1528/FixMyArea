@@ -21,6 +21,10 @@
                         <form method="POST" action="{{ route('issues.store') }}" class="space-y-8">
                             @csrf
 
+                            <!-- Hidden fields for coordinates -->
+                            <input type="hidden" name="latitude" id="latitude" value="">
+                            <input type="hidden" name="longitude" id="longitude" value="">
+
                             <!-- Issue Title -->
                             <div class="space-y-2">
                                 <label for="title" class="text-sm font-semibold text-gray-400 ml-1 uppercase tracking-wider">Issue Title</label>
@@ -76,15 +80,21 @@
                                     <textarea name="description" id="description" rows="5" required
                                         class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner resize-none"
                                         placeholder="Describe the issue in detail..."></textarea>
-                                    <div class="absolute bottom-4 right-4 text-xs text-gray-600">0/1000</div>
                                 </div>
                                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
                             </div>
 
-                            <!-- Location -->
-                            <div class="space-y-2">
-                                <label for="address" class="text-sm font-semibold text-gray-400 ml-1 uppercase tracking-wider">Location Address (Optional)</label>
-                                <div class="flex space-x-4">
+                            <!-- Location Section -->
+                            <div class="space-y-4">
+                                <label class="text-sm font-semibold text-gray-400 ml-1 uppercase tracking-wider">Location</label>
+                                
+                                <!-- Map Container -->
+                                <div class="bg-[#0f111a] rounded-2xl border border-[#2d3142] overflow-hidden">
+                                    <div id="create-map" class="w-full h-[300px] rounded-2xl"></div>
+                                </div>
+
+                                <!-- Location Controls -->
+                                <div class="flex flex-col sm:flex-row gap-4">
                                     <div class="relative flex-1 group">
                                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-indigo-500 transition-colors">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,32 +104,17 @@
                                         </div>
                                         <input type="text" name="address" id="address"
                                             class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner"
-                                            placeholder="e.g., 123 Main St, Springfield">
+                                            placeholder="Address will be detected automatically or enter manually">
                                     </div>
-                                    <button type="button" class="px-6 py-4 bg-[#1e2130] hover:bg-[#2d3142] border border-[#2d3142] text-indigo-400 rounded-2xl flex items-center space-x-2 transition-all shadow-lg active:scale-95">
+                                    <button type="button" id="use-location-btn" class="px-6 py-4 bg-[#1e2130] hover:bg-[#2d3142] border border-[#2d3142] text-indigo-400 rounded-2xl flex items-center space-x-2 transition-all shadow-lg active:scale-95">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-3.44A20.01 20.01 0 006 12c0-5.523 4.477-10 10-10s10 4.477 10 10c0 2.11-.653 4.07-1.777 5.69a9.493 9.493 0 01-3.44 3.44M8 21l4-4 4 4m-4-4v8" />
                                         </svg>
                                         <span class="font-semibold text-sm whitespace-nowrap">Use My Location</span>
                                     </button>
                                 </div>
+                                <p class="text-xs text-gray-500 ml-1">Click on the map to pin the exact location of the issue</p>
                                 <x-input-error class="mt-2" :messages="$errors->get('address')" />
-                            </div>
-
-                            <!-- Image Upload Placeholder -->
-                            <div class="space-y-2">
-                                <label class="text-sm font-semibold text-gray-400 ml-1 uppercase tracking-wider">Add Photos (Optional)</label>
-                                <div class="border-2 border-dashed border-[#2d3142] rounded-3xl p-10 flex flex-col items-center justify-center space-y-4 hover:border-indigo-500/50 transition-colors bg-[#0f111a]/50 cursor-pointer group">
-                                    <div class="bg-[#1e2130] p-4 rounded-full group-hover:scale-110 transition-transform shadow-xl">
-                                        <svg class="w-8 h-8 text-gray-500 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                        </svg>
-                                    </div>
-                                    <div class="text-center">
-                                        <p class="text-white font-medium">Drag and drop images here, or click to browse</p>
-                                        <p class="text-sm text-gray-500 mt-1">JPG, PNG up to 5MB</p>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Actions -->
@@ -171,19 +166,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-white font-semibold mb-1">Add location</p>
-                                    <p class="text-sm text-gray-500 leading-relaxed">Helps us find and fix the issue faster in your neighborhood.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start space-x-4">
-                                <div class="bg-[#1e2130] p-2 rounded-xl text-indigo-400">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-white font-semibold mb-1">Include photos</p>
-                                    <p class="text-sm text-gray-500 leading-relaxed">Images help us visually verify and assess the severity.</p>
+                                    <p class="text-white font-semibold mb-1">Pin the exact location</p>
+                                    <p class="text-sm text-gray-500 leading-relaxed">Click on the map to pinpoint exactly where the issue is located.</p>
                                 </div>
                             </li>
                         </ul>
@@ -200,7 +184,7 @@
                                     </svg>
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <svg class="w-10 h-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                         </svg>
                                     </div>
                                 </div>
@@ -218,4 +202,142 @@
             </div>
         </div>
     </div>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <style>
+        .custom-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+    </style>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let map;
+            let marker;
+            const defaultLat = 12.9716;
+            const defaultLng = 77.5946;
+
+            // Initialize the map
+            map = L.map('create-map').setView([defaultLat, defaultLng], 13);
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Create custom marker
+            function createMarker(lat, lng) {
+                const customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="
+                        background-color: #6366f1; 
+                        width: 40px; 
+                        height: 40px; 
+                        border-radius: 50%; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        border: 4px solid white; 
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        position: relative;
+                    ">
+                        <div style="
+                            width: 0;
+                            height: 0;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-top: 15px solid #6366f1;
+                            position: absolute;
+                            bottom: -15px;
+                        "></div>
+                    </div>`,
+                    iconSize: [40, 55],
+                    iconAnchor: [20, 55],
+                    popupAnchor: [0, -55],
+                });
+
+                return L.marker([lat, lng], { icon: customIcon });
+            }
+
+            // Add marker on map click
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+
+                marker = createMarker(lat, lng);
+                marker.addTo(map);
+
+                // Update hidden fields
+                document.getElementById('latitude').value = lat.toFixed(6);
+                document.getElementById('longitude').value = lng.toFixed(6);
+
+                // Reverse geocode to get address
+                reverseGeocode(lat, lng);
+            });
+
+            // Reverse geocoding using Nominatim
+            function reverseGeocode(lat, lng) {
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.display_name) {
+                            document.getElementById('address').value = data.display_name;
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error getting address:', error);
+                    });
+            }
+
+            // Use current location button
+            document.getElementById('use-location-btn').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+
+                            if (marker) {
+                                map.removeLayer(marker);
+                            }
+
+                            marker = createMarker(lat, lng);
+                            marker.addTo(map);
+
+                            map.setView([lat, lng], 15);
+
+                            // Update hidden fields
+                            document.getElementById('latitude').value = lat.toFixed(6);
+                            document.getElementById('longitude').value = lng.toFixed(6);
+
+                            // Reverse geocode to get address
+                            reverseGeocode(lat, lng);
+                        },
+                        function(error) {
+                            alert('Could not get your location. Please check your browser permissions.');
+                        }
+                    );
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
+            });
+
+            // Initialize with default marker
+            marker = createMarker(defaultLat, defaultLng);
+            marker.addTo(map);
+            document.getElementById('latitude').value = defaultLat.toFixed(6);
+            document.getElementById('longitude').value = defaultLng.toFixed(6);
+        });
+    </script>
 </x-app-layout>
