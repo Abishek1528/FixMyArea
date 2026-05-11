@@ -51,6 +51,8 @@ class IssueController extends Controller
             'category' => 'required|string|in:Roads,Lighting,Waste,Water,Other',
             'description' => 'required|string|max:1000',
             'address' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $request->user()->issues()->create($validated);
