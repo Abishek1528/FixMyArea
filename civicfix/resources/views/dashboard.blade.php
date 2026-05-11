@@ -83,14 +83,21 @@
                                 @foreach($issues as $issue)
                                     <tr class="hover:bg-[#1e2130]/30 transition-colors group">
                                         <td class="px-8 py-6">
-                                            <div class="flex flex-col">
-                                                <a href="{{ route('issues.show', $issue) }}" class="text-white font-semibold group-hover:text-indigo-400 transition-colors">{{ $issue->title }}</a>
-                                                <span class="text-gray-500 text-sm mt-1 flex items-center">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    </svg>
-                                                    {{ Str::limit($issue->address ?? 'No address provided', 40) }}
-                                                </span>
+                                            <div class="flex items-start gap-4">
+                                                @if($issue->image)
+                                                    <div class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-[#2d3142] shadow">
+                                                        <img src="{{ Storage::url($issue->image) }}" alt="{{ $issue->title }}" class="w-full h-full object-cover">
+                                                    </div>
+                                                @endif
+                                                <div class="flex flex-col">
+                                                    <a href="{{ route('issues.show', $issue) }}" class="text-white font-semibold group-hover:text-indigo-400 transition-colors">{{ $issue->title }}</a>
+                                                    <span class="text-gray-500 text-sm mt-1 flex items-center">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        </svg>
+                                                        {{ Str::limit($issue->address ?? 'No address provided', 40) }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-8 py-6">

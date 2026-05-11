@@ -46,6 +46,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
+                    <!-- Image Card -->
+                    @if($issue->image)
+                        <div class="bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl overflow-hidden">
+                            <img src="{{ Storage::url($issue->image) }}" alt="{{ $issue->title }}" class="w-full h-auto object-cover">
+                        </div>
+                    @endif
                     <!-- Issue Details Card -->
                     <div class="bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl p-8">
                         <div class="flex items-center space-x-3 mb-6">
