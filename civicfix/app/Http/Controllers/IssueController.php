@@ -53,7 +53,12 @@ class IssueController extends Controller
             'address' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('issues', 'public');
+        }
 
         $request->user()->issues()->create($validated);
 

@@ -18,7 +18,7 @@
                 <!-- Main Form Column -->
                 <div class="lg:col-span-2">
                     <div class="bg-[#161925] rounded-3xl p-8 border border-[#2d3142] shadow-2xl">
-                        <form method="POST" action="{{ route('issues.store') }}" class="space-y-8">
+                        <form method="POST" action="{{ route('issues.store') }}" enctype="multipart/form-data" class="space-y-8">
                             @csrf
 
                             <!-- Hidden fields for coordinates -->
@@ -115,6 +115,22 @@
                                 </div>
                                 <p class="text-xs text-gray-500 ml-1">Click on the map to pin the exact location of the issue</p>
                                 <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-gray-400 ml-1 uppercase tracking-wider">Photo of Issue (Optional)</label>
+                                <div class="relative group">
+                                    <div class="absolute top-4 left-4 pointer-events-none text-gray-500 group-focus-within:text-indigo-500 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <input type="file" name="image" id="image" accept="image/*"
+                                        class="block w-full pl-12 pr-4 py-4 bg-[#0f111a] border-[#2d3142] rounded-2xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner file:mr-4 file:py-2 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500">
+                                </div>
+                                <p class="text-xs text-gray-500 ml-1">Supported formats: JPG, PNG, GIF, WEBP (Max 10MB)</p>
+                                <x-input-error class="mt-2" :messages="$errors->get('image')" />
                             </div>
 
                             <!-- Actions -->

@@ -15,6 +15,7 @@ class Issue extends Model
         'latitude',
         'longitude',
         'address',
+        'image',
     ];
 
     /**
