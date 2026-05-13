@@ -34,6 +34,20 @@ class IssueController extends Controller
     }
 
     /**
+     * Display a listing of all issues (community).
+     */
+    public function all(): View
+    {
+        $issues = Issue::with('user', 'upvoters')
+            ->latest()
+            ->paginate(12);
+
+        return view('issues.index', [
+            'issues' => $issues,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new issue.
      */
     public function create(): View
@@ -72,10 +86,6 @@ class IssueController extends Controller
      */
     public function show(Issue $issue): View
     {
-        if ($issue->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         return view('issues.show', [
             'issue' => $issue,
         ]);
@@ -125,5 +135,21 @@ class IssueController extends Controller
         return view('issues.map', [
             'issues' => $issues,
         ]);
+    }
+
+    /**
+     * Toggle upvote on an issue.
+     */
+    public function upvote(Issue $issue): RedirectResponse
+    {
+        $user = auth()->user();
+        
+        if ($user->upvotedIssues()->where('issue_id', $issue->id)->exists()) {
+            $user->upvotedIssues()->detach($issue);
+        } else {
+            $user->upvotedIssues()->attach($issue);
+        }
+
+        return back();
     }
 }

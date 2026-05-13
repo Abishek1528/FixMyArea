@@ -12,6 +12,8 @@ Route::get('/dashboard', [IssueController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/issues', [IssueController::class, 'all'])->name('issues.all');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
     Route::get('/issues/{issue}/edit', [IssueController::class, 'edit'])->name('issues.edit');
     Route::put('/issues/{issue}', [IssueController::class, 'update'])->name('issues.update');
+    Route::post('/issues/{issue}/upvote', [IssueController::class, 'upvote'])->name('issues.upvote');
     Route::get('/map', [IssueController::class, 'map'])->name('issues.map');
 });
 

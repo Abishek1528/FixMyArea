@@ -140,15 +140,42 @@
 
                 <!-- Sidebar -->
                 <div class="space-y-6">
+                    <!-- Upvote Section -->
+                    <div class="bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl p-6">
+                        <h3 class="text-white font-semibold mb-4">Upvote</h3>
+                        @auth
+                            <form action="{{ route('issues.upvote', $issue) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-2xl shadow-lg transition-all active:scale-95 {{ auth()->user()->upvotedIssues()->where('issue_id', $issue->id)->exists() ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20' : 'bg-[#1e2130] hover:bg-[#2d3142] text-gray-300 border border-[#2d3142]' }}">
+                                    <svg class="w-5 h-5 mr-2" fill="{{ auth()->user()->upvotedIssues()->where('issue_id', $issue->id)->exists() ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                    <span class="font-semibold">{{ $issue->upvotes_count }} Upvotes</span>
+                                </button>
+                            </form>
+                        @endauth
+                        @guest
+                            <div class="w-full inline-flex items-center justify-center px-4 py-3 bg-[#1e2130] text-gray-400 rounded-2xl border border-[#2d3142]">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                </svg>
+                                <span class="font-semibold">{{ $issue->upvotes_count }} Upvotes</span>
+                            </div>
+                            <p class="text-gray-500 text-xs mt-2 text-center">Login to upvote</p>
+                        @endguest
+                    </div>
+
                     <!-- Quick Actions -->
                     <div class="bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl p-6">
                         <h3 class="text-white font-semibold mb-4">Quick Actions</h3>
-                        <a href="{{ route('issues.edit', $issue) }}" class="w-full inline-flex items-center justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Update Status
-                        </a>
+                        @if($issue->user_id === auth()->id())
+                            <a href="{{ route('issues.edit', $issue) }}" class="w-full inline-flex items-center justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                Update Status
+                            </a>
+                        @endif
                     </div>
 
                     <!-- Info Card -->

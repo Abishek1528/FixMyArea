@@ -37,4 +37,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Issue::class);
     }
+
+    /**
+     * Get the issues upvoted by the user.
+     */
+    public function upvotedIssues()
+    {
+        return $this->belongsToMany(Issue::class, 'upvotes')->withTimestamps();
+    }
 }

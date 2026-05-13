@@ -25,4 +25,20 @@ class Issue extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the users that upvoted the issue.
+     */
+    public function upvoters()
+    {
+        return $this->belongsToMany(User::class, 'upvotes')->withTimestamps();
+    }
+
+    /**
+     * Get the number of upvotes for the issue.
+     */
+    public function getUpvotesCountAttribute()
+    {
+        return $this->upvoters()->count();
+    }
 }
