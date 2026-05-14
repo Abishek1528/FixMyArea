@@ -1,17 +1,24 @@
 <x-app-layout>
-    <div class="min-h-screen bg-[#0f111a] text-gray-300 font-sans">
+    <div class="min-h-screen bg-primary-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             
             <!-- Header -->
             <div class="flex items-center space-x-4 mb-8">
-                <a href="{{ route('dashboard') }}" class="p-2 hover:bg-[#1e2130] rounded-xl transition-colors">
+                <a href="{{ route('dashboard') }}" class="p-2 hover:bg-primary-100 rounded-xl transition-colors text-gray-600 hover:text-primary-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">Community Map</h1>
-                    <p class="text-gray-400 mt-1">View all reported issues in your community</p>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-br from-primary-600 to-primary-700 p-3 rounded-2xl shadow-lg">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0C7.938 4 4 7.938 4 13c0 5.062 3.938 9 9 9s9-3.938 9-9c0-5.062-3.938-9-9-9z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-primary-900 tracking-tight">Community Map</h1>
+                        <p class="text-gray-500 mt-1">View all reported issues in your community</p>
+                    </div>
                 </div>
             </div>
 
@@ -34,35 +41,35 @@
                     ];
                 @endphp
                 @foreach($stats as $key => $count)
-                    <div class="bg-[#161925] p-4 rounded-2xl border border-[#2d3142] text-center">
-                        <p class="text-2xl font-bold text-white">{{ $count }}</p>
+                    <div class="bg-white p-4 rounded-2xl border border-primary-100 text-center shadow-xl">
+                        <p class="text-2xl font-bold text-primary-900">{{ $count }}</p>
                         <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">{{ $statusLabels[$key] }}</p>
                     </div>
                 @endforeach
             </div>
 
             <!-- Map Container -->
-            <div class="bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl overflow-hidden">
+            <div class="bg-white rounded-3xl border border-primary-100 shadow-2xl overflow-hidden">
                 <div id="map" class="w-full h-[600px] rounded-3xl"></div>
             </div>
 
             <!-- Legend -->
-            <div class="mt-6 bg-[#161925] rounded-3xl border border-[#2d3142] p-6">
-                <h3 class="text-white font-semibold mb-4">Issue Categories</h3>
+            <div class="mt-6 bg-white rounded-3xl border border-primary-100 p-6 shadow-xl">
+                <h3 class="text-primary-900 font-semibold mb-4">Issue Categories</h3>
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                     @php
                         $categoryColors = [
                             'Roads' => 'bg-red-500',
                             'Lighting' => 'bg-yellow-500',
                             'Waste' => 'bg-green-500',
-                            'Water' => 'bg-blue-500',
+                            'Water' => 'bg-primary-500',
                             'Other' => 'bg-purple-500',
                         ];
                     @endphp
                     @foreach(['Roads', 'Lighting', 'Waste', 'Water', 'Other'] as $category)
                         <div class="flex items-center space-x-2">
                             <div class="w-3 h-3 rounded-full {{ $categoryColors[$category] }}"></div>
-                            <span class="text-gray-400 text-sm">{{ $category }}</span>
+                            <span class="text-gray-600 text-sm">{{ $category }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -101,7 +108,7 @@
                 'Roads': '#ef4444',
                 'Lighting': '#eab308',
                 'Waste': '#22c55e',
-                'Water': '#3b82f6',
+                'Water': '#2563EB',
                 'Other': '#a855f7',
             };
 
@@ -109,7 +116,7 @@
             const statusColors = {
                 'pending': '#eab308',
                 'investigating': '#3b82f6',
-                'in_progress': '#6366f1',
+                'in_progress': '#2563EB',
                 'resolved': '#22c55e',
                 'closed': '#6b7280',
             };
@@ -125,7 +132,7 @@
                 
                 if (lat && lng) {
                     console.log(`Adding marker for issue at:`, lat, lng);
-                    const color = categoryColors[issue.category] || '#6366f1';
+                    const color = categoryColors[issue.category] || '#2563EB';
                     
                     // Create custom icon with color
                     const customIcon = L.divIcon({
