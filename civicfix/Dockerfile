@@ -21,9 +21,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /app/civicfix
-
-COPY civicfix/ .
+COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
