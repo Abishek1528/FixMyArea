@@ -41,4 +41,12 @@ class Issue extends Model
     {
         return $this->upvoters()->count();
     }
+
+    /**
+     * Get the comments for the issue.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
 }

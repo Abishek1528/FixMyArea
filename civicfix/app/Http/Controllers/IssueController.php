@@ -86,9 +86,29 @@ class IssueController extends Controller
      */
     public function show(Issue $issue): View
     {
+        $issue->load('comments.user');
+        
         return view('issues.show', [
             'issue' => $issue,
         ]);
+    }
+
+    /**
+     * Store a new comment on an issue.
+     */
+    public function storeComment(Request $request, Issue $issue): RedirectResponse
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $issue->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return back()->with('status', 'comment-added')
+            ->with('message', 'Your comment has been added successfully!');
     }
 
     /**
