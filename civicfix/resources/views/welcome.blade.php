@@ -435,11 +435,12 @@
                                 @if (Route::has('login'))
                                     @auth
                                         <a href="{{ url('/dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+                                        <a href="{{ route('issues.create') }}" class="btn btn-secondary">Report Issue</a>
                                     @else
                                         @if (Route::has('register'))
-                                            <a href="{{ route('register') }}" class="btn btn-primary">Report an Issue</a>
+                                            <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
                                         @endif
-                                        <a href="{{ route('login') }}" class="btn btn-secondary">Learn More</a>
+                                        <a href="{{ route('login') }}" class="btn btn-secondary">Log In</a>
                                     @endauth
                                 @endif
                             </div>
