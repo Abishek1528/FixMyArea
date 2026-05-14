@@ -32,6 +32,15 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        if (!User::where('email', 'rohan.admin@gmail.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Rohan Admin',
+                'email' => 'rohan.admin@gmail.com',
+                'password' => bcrypt('password123'),
+                'is_admin' => true,
+            ]);
+        }
+
         $this->call(IssueSeeder::class);
     }
 }
