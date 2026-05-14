@@ -198,6 +198,81 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Comments Section -->
+            <div class="mt-10 bg-[#161925] rounded-3xl border border-[#2d3142] shadow-2xl overflow-hidden">
+                <div class="p-8 border-b border-[#2d3142] flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white">Discussion ({{ $issue->comments->count() }})</h2>
+                </div>
+
+                <!-- Comment Form -->
+                @auth
+                    <div class="p-8 border-b border-[#2d3142]">
+                        <form action="{{ route('issues.comments.store', $issue) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <textarea 
+                                    name="content" 
+                                    rows="3" 
+                                    class="w-full bg-[#0f111a] border border-[#2d3142] rounded-xl px-4 py-3 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                    placeholder="Add a comment..."
+                                    required
+                                ></textarea>
+                                @error('content')
+                                    <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+                                Post Comment
+                            </button>
+                        </form>
+                    </div>
+                @endauth
+                @guest
+                    <div class="p-8 border-b border-[#2d3142]">
+                        <p class="text-gray-400">
+                            <a href="{{ route('login') }}" class="text-indigo-400 hover:text-indigo-300 font-semibold">Login</a> or 
+                            <a href="{{ route('register') }}" class="text-indigo-400 hover:text-indigo-300 font-semibold">Register</a> to add a comment.
+                        </p>
+                    </div>
+                @endguest
+
+                <!-- Comments List -->
+                <div class="divide-y divide-[#2d3142]">
+                    @foreach($issue->comments as $comment)
+                        <div class="p-8">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                                        <span class="text-indigo-400 font-bold text-sm">{{ strtoupper(substr($comment->user->name, 0, 1)) }}</span>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-semibold text-white">{{ $comment->user->name }}</span>
+                                            <span class="text-gray-500 text-xs">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 leading-relaxed">{{ $comment->content }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    @if($issue->comments->isEmpty())
+                        <div class="p-16 text-center">
+                            <div class="bg-[#1e2130] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#2d3142]">
+                                <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-white mb-2">No comments yet</h3>
+                            <p class="text-gray-500">Be the first to comment on this issue!</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

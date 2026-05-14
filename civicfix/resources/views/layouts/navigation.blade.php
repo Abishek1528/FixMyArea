@@ -24,6 +24,16 @@
                     <x-nav-link :href="route('issues.create')" :active="request()->routeIs('issues.create')">
                         {{ __('Report Issue') }}
                     </x-nav-link>
+                    @auth
+                        @if(Auth::user()->is_admin)
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                {{ __('Admin Dashboard') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.moderation')" :active="request()->routeIs('admin.moderation')">
+                                {{ __('Moderation') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -88,6 +98,16 @@
             <x-responsive-nav-link :href="route('issues.create')" :active="request()->routeIs('issues.create')">
                 {{ __('Report Issue') }}
             </x-responsive-nav-link>
+            @auth
+                @if(Auth::user()->is_admin)
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Dashboard') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.moderation')" :active="request()->routeIs('admin.moderation')">
+                        {{ __('Moderation') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
